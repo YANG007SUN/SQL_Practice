@@ -1,4 +1,4 @@
-# https://www.hackerrank.com/challenges/the-company/problem
+-- https://www.hackerrank.com/challenges/the-company/problem
 
 SELECT company_code, founder, 
   
@@ -28,3 +28,25 @@ SELECT company_code, founder,
   
 FROM Company AS c
 ORDER BY company_code
+
+
+
+
+-- Alternative solution
+SELECT c.company_code, c.founder,
+    COUNT(DISTINCT l.lead_manager_code),
+    COUNT(DISTINCT s.senior_manager_code),
+    COUNT(DISTINCT m.manager_code),
+    COUNT(DISTINCT e.employee_code)
+FROM Company AS c,
+     Lead_Manager as l,
+     Senior_Manager as s,
+     Manager as m,
+     Employee as e
+WHERE e.manager_code = m.manager_code AND
+      m.senior_manager_code = s.senior_manager_code AND
+      s.lead_manager_code = l.lead_manager_code AND
+      l.company_code = c.company_code
+GROUP BY c.company_code, c.founder
+ORDER BY c.company_code
+      
