@@ -16,3 +16,21 @@ FROM (
   ORDER by rk
 ) AS c
 GROUP BY c.rk;
+
+
+
+-- Alternative Solution, use Windown function to find out the rank of each person by occupation
+
+SELECT 
+       MAX(CASE WHEN a.Occupation ='Doctor' THEN Name ELSE NULL END),
+       MAX(CASE WHEN a.Occupation ='Professor' THEN Name ELSE NULL END),
+       MAX(CASE WHEN a.Occupation ='Singer' THEN Name ELSE NULL END),
+       MAX(CASE WHEN a.Occupation ='Actor' THEN Name ELSE NULL END)
+       
+FROM  (SELECT Occupation, 
+           Name, 
+           ROW_NUMBER() OVER (PARTITION BY OCCUPATION ORDER BY NAME) AS row_num
+       FROM OCCUPATIONS
+       ORDER BY row_num) AS a
+
+GROUP BY a.row_num
